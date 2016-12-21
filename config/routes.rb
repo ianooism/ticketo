@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
-  resources :tickets
-  resources :projects
+  resources :projects do
+    resources :tickets
+  end
   
   get 'pages/about'
 
