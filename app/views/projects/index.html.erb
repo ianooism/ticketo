@@ -4,7 +4,7 @@
   <div><%= link_to 'Create Project', new_project_path %></div>
 <% end %>
 
-<% @projects.each do |project| %>
+<% @projects.order("created_at desc").each do |project| %>
   <div>
     Name:
     <%= project.name %>
@@ -22,7 +22,7 @@
   
   <div>
     <%= link_to 'Show', project %>
-    <% if user_signed_in? %>
+    <% if user_signed_in? && project.owner?(current_user) %>
       | <%= link_to 'Edit', edit_project_path(project) %>
       | <%= link_to 'Destroy', project, method: :delete,
             data: { confirm: 'Are you sure?' } %>
