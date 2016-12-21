@@ -1,0 +1,10 @@
+<h1><%= singular_table_name.titleize %></h1>
+
+<% attributes.reject(&:password_digest?).each do |attribute| -%>
+<div>
+  <%= attribute.human_name %>:
+  <%%= @<%= singular_table_name %>.<%= attribute.name %> %>
+</div>
+
+<% end -%>
+<div><%%= link_to 'Back', <%= index_helper %>_path %></div>

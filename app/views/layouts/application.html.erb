@@ -1,14 +1,17 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Ticketo</title>
+    <title>Helpdesk</title>
     <%= csrf_meta_tags %>
-
-    <%= stylesheet_link_tag    'application', media: 'all' %>
+    <%= stylesheet_link_tag 'application', media: 'all' %>
     <%= javascript_include_tag 'application' %>
   </head>
 
   <body>
+    <% flash.each do |name, message| %>
+      <%= content_tag :div, message, class: name %>
+    <% end %>
+    
     <%= yield %>
   </body>
 </html>
