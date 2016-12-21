@@ -1,8 +1,6 @@
 <h1>Projects</h1>
 
-<% if user_signed_in? %>
-  <div><%= link_to 'Create Project', new_project_path %></div>
-<% end %>
+<div><%= link_to 'Create Project', new_project_path %></div>
 
 <% @projects.order("created_at desc").each do |project| %>
   <div>
