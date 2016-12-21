@@ -17,6 +17,7 @@ class ProjectsController < ApplicationController
 
   def create
     @project = Project.new(project_params)
+    @project.owner = current_user
     
     if @project.save
       redirect_to @project, notice: 'Project created.'
@@ -48,6 +49,6 @@ class ProjectsController < ApplicationController
     end
 
     def project_params
-      params.require(:project).permit(:name, :description, :owner_id)
+      params.require(:project).permit(:name, :description)
     end
 end
