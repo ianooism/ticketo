@@ -1,0 +1,23 @@
+<h1>Ticket</h1>
+
+<div>
+  Name:
+  <%= @ticket.name %>
+</div>
+
+<div>
+  Description:
+  <%= @ticket.description %>
+</div>
+
+<div>
+  Project:
+  <%= @ticket.project %>
+</div>
+
+<div>
+  Owner:
+  <%= @ticket.owner %>
+</div>
+
+<div><%= link_to 'Back', tickets_path %></div>

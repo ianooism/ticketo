@@ -1,0 +1,32 @@
+<h1>Tickets</h1>
+
+<div><%= link_to 'Create Ticket', new_ticket_path %></div>
+
+<% @tickets.each do |ticket| %>
+  <div>
+    Name:
+    <%= ticket.name %>
+  </div>
+  
+  <div>
+    Description:
+    <%= ticket.description %>
+  </div>
+  
+  <div>
+    Project:
+    <%= ticket.project %>
+  </div>
+  
+  <div>
+    Owner:
+    <%= ticket.owner %>
+  </div>
+  
+  <div>
+    <%= link_to 'Show', ticket %> |
+    <%= link_to 'Edit', edit_ticket_path(ticket) %> | 
+    <%= link_to 'Destroy', ticket, method: :delete,
+              data: { confirm: 'Are you sure?' } %>
+  </div>
+<% end %>
