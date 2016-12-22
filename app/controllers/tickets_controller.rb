@@ -1,4 +1,6 @@
 class TicketsController < ApplicationController
+  skip_before_action :authenticate_user!, only: [:show]
+  
   def index
     @project = set_project
     @tickets = @project.tickets

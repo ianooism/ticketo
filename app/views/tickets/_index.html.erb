@@ -6,9 +6,11 @@
   <%= render 'tickets/ticket', ticket: ticket %>
   
   <div>
-    <%= link_to 'Show', [project, ticket] %> |
-    <%= link_to 'Edit', edit_project_ticket_path(project, ticket) %> | 
-    <%= link_to 'Destroy', [project, ticket], method: :delete,
-          data: { confirm: 'Are you sure?' } %>
+    <%= link_to 'Show', [project, ticket] %>
+    <% if ticket.owner?(current_user) %>
+      | <%= link_to 'Edit', edit_project_ticket_path(project, ticket) %>
+      | <%= link_to 'Destroy', [project, ticket], method: :delete,
+            data: { confirm: 'Are you sure?' } %>
+    <% end %>
   </div>
 <% end %>

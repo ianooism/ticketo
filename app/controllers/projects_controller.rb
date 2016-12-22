@@ -1,6 +1,6 @@
 class ProjectsController < ApplicationController
   skip_before_action :authenticate_user!, only: [:index, :show]
-  before_action :block_non_owner, only: [:edit, :update, :destroy]
+  before_action :check_authorization, only: [:edit, :update, :destroy]
   
   def index
     @projects = Project.all
@@ -53,11 +53,9 @@ class ProjectsController < ApplicationController
       Project.find(params[:id])
     end
     
-    def block_non_owner
+    def check_authorization
       project = set_project
-      unless project.owner?(current_user)
-        redirect_to projects_url, notice: 'Action not permitted.'
-      end
+      raise NotAuthorized unless project.owner?(current_user)
     end
 
     def form_params
