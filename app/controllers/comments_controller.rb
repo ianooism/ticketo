@@ -1,13 +1,18 @@
 class CommentsController < ApplicationController
   def index
-    @comments = Comment.all
+    @ticket = set_ticket
+    @comments = @ticket.comments.all
   end
 
   def show
+    @ticket = set_ticket
+    @project = @ticket.project
     @comment = set_comment
   end
 
   def new
+    @ticket = set_ticket
+    @project = @ticket.project
     @comment = Comment.new
   end
 
@@ -16,10 +21,13 @@ class CommentsController < ApplicationController
   end
 
   def create
-    @comment = Comment.new(comment_params)
+    @ticket = set_ticket
+    @comment = Comment.new(form_params)
+    
+    @comment.attributes = { ticket: @ticket, owner: current_user }
     
     if @comment.save
-      redirect_to @comment, notice: 'Comment created.'
+      redirect_to [@ticket, @comment], notice: 'Comment created.'
     else
       render 'new'
     end
@@ -28,7 +36,7 @@ class CommentsController < ApplicationController
   def update
     @comment = set_comment
     
-    if @comment.update(comment_params)
+    if @comment.update(form_params)
       redirect_to @comment, notice: 'Comment updated.'
     else
       render 'edit'
@@ -43,11 +51,15 @@ class CommentsController < ApplicationController
   end
 
   private
-    def set_comment
-      Comment.find(params[:id])
+    def set_ticket
+      Ticket.find(params[:ticket_id])
     end
-
-    def comment_params
-      params.require(:comment).permit(:body, :ticket_id, :owner_id)
+    
+    def set_comment
+      set_ticket.comments.find(params[:id])
+    end
+    
+    def form_params
+      params.require(:comment).permit(:body)
     end
 end

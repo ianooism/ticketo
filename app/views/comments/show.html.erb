@@ -1,18 +1,5 @@
 <h1>Comment</h1>
 
-<div>
-  Body:
-  <%= @comment.body %>
-</div>
+<%= render @comment %>
 
-<div>
-  Ticket:
-  <%= @comment.ticket %>
-</div>
-
-<div>
-  Owner:
-  <%= @comment.owner %>
-</div>
-
-<div><%= link_to 'Back', comments_path %></div>
+<%= render 'footer', project: @project, ticket: @ticket %>
