@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   resources :projects do
-    resources :tickets
+    resources :tickets, except: :index
   end
   
   get 'pages/about'

@@ -1,11 +1,6 @@
 class TicketsController < ApplicationController
   skip_before_action :authenticate_user!, only: [:show]
   before_action :check_authorization, only: [:edit, :update, :destroy]
-  
-  def index
-    @project = set_project
-    @tickets = @project.tickets
-  end
 
   def show
     @project = set_project
