@@ -3,24 +3,11 @@
 <div><%= link_to 'Create Project', new_project_path %></div>
 
 <% @projects.order("created_at desc").each do |project| %>
-  <div>
-    Name:
-    <%= project.name %>
-  </div>
-  
-  <div>
-    Description:
-    <%= project.description %>
-  </div>
-  
-  <div>
-    Owner:
-    <%= project.owner.email %>
-  </div>
+  <%= render 'project', project: project %>
   
   <div>
     <%= link_to 'Show', project %>
-    <% if user_signed_in? && project.owner?(current_user) %>
+    <% if project.owner?(current_user) %>
       | <%= link_to 'Edit', edit_project_path(project) %>
       | <%= link_to 'Destroy', project, method: :delete,
             data: { confirm: 'Are you sure?' } %>

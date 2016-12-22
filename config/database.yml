@@ -81,5 +81,5 @@ test:
 production:
   <<: *default
   database: ticketo_production
-  username: ticketo
-  password: <%= ENV['TICKETO_DATABASE_PASSWORD'] %>
+  #username: ticketo
+  #password: <%= ENV['TICKETO_DATABASE_PASSWORD'] %>

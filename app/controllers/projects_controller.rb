@@ -1,6 +1,6 @@
 class ProjectsController < ApplicationController
   skip_before_action :authenticate_user!, only: [:index, :show]
-  before_action :block_non_owner, only: [:edit, :update, :destroy]
+  before_action :check_authorization, only: [:edit, :update, :destroy]
   
   def index
     @projects = Project.all
@@ -8,6 +8,9 @@ class ProjectsController < ApplicationController
 
   def show
     @project = set_project
+    @tickets = @project.tickets
+    # don't put unpersisted ticket into project.tickets collection
+    @ticket = Ticket.new(project: @project)
   end
 
   def new
@@ -19,11 +22,12 @@ class ProjectsController < ApplicationController
   end
 
   def create
-    @project = Project.new(project_params)
+    @project = Project.new(form_params)
+    
     @project.owner = current_user
     
     if @project.save
-      redirect_to @project, notice: 'Project created.'
+      redirect_to projects_url, notice: 'Project created.'
     else
       render 'new'
     end
@@ -32,7 +36,7 @@ class ProjectsController < ApplicationController
   def update
     @project = set_project
     
-    if @project.update(project_params)
+    if @project.update(form_params)
       redirect_to @project, notice: 'Project updated.'
     else
       render 'edit'
@@ -51,14 +55,12 @@ class ProjectsController < ApplicationController
       Project.find(params[:id])
     end
     
-    def block_non_owner
+    def check_authorization
       project = set_project
-      unless project.owner?(current_user)
-        redirect_to projects_url, notice: 'Action not permitted.'
-      end
+      raise NotAuthorized unless project.owner?(current_user)
     end
 
-    def project_params
+    def form_params
       params.require(:project).permit(:name, :description)
     end
 end

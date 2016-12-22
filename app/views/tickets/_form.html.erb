@@ -1,0 +1,30 @@
+<%= form_for([project, ticket]) do |f| %>
+  <% if ticket.errors.any? %>
+    <div>
+      <h2>
+        <%= pluralize(ticket.errors.count, "error") %>
+            prevented this ticket from being saved:
+      </h2>
+      
+      <ul>
+        <% ticket.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= f.label :name %>
+    <%= f.text_field :name %>
+  </div>
+
+  <div>
+    <%= f.label :description %>
+    <%= f.text_area :description %>
+  </div>
+
+  <div>
+    <%= f.submit %>
+  </div>
+<% end %>

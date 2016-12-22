@@ -1,18 +1,11 @@
 <h1>Project</h1>
 
-<div>
-  Name:
-  <%= @project.name %>
-</div>
+<%= render 'project', project: @project %>
 
-<div>
-  Description:
-  <%= @project.description %>
-</div>
+<%= render 'footer' %>
 
-<div>
-  Owner:
-  <%= @project.owner.email %>
-</div>
+<%= render 'tickets/index', project: @project, tickets: @tickets %>
 
-<div><%= link_to 'Back', projects_path %></div>
+<h1>Create Ticket</h1>
+
+<%= render 'tickets/form', project: @project, ticket: @ticket %>
