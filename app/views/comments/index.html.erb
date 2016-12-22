@@ -1,0 +1,27 @@
+<h1>Comments</h1>
+
+<div><%= link_to 'Create Comment', new_comment_path %></div>
+
+<% @comments.each do |comment| %>
+  <div>
+    Body:
+    <%= comment.body %>
+  </div>
+  
+  <div>
+    Ticket:
+    <%= comment.ticket %>
+  </div>
+  
+  <div>
+    Owner:
+    <%= comment.owner %>
+  </div>
+  
+  <div>
+    <%= link_to 'Show', comment %> |
+    <%= link_to 'Edit', edit_comment_path(comment) %> | 
+    <%= link_to 'Destroy', comment, method: :delete,
+              data: { confirm: 'Are you sure?' } %>
+  </div>
+<% end %>
