@@ -19,7 +19,8 @@ class ProjectsController < ApplicationController
   end
 
   def create
-    @project = Project.new(project_params)
+    @project = Project.new(form_params)
+    
     @project.owner = current_user
     
     if @project.save
@@ -32,7 +33,7 @@ class ProjectsController < ApplicationController
   def update
     @project = set_project
     
-    if @project.update(project_params)
+    if @project.update(form_params)
       redirect_to @project, notice: 'Project updated.'
     else
       render 'edit'
@@ -58,7 +59,7 @@ class ProjectsController < ApplicationController
       end
     end
 
-    def project_params
+    def form_params
       params.require(:project).permit(:name, :description)
     end
 end
