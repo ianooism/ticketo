@@ -1,5 +1,6 @@
 class TicketsController < ApplicationController
   skip_before_action :authenticate_user!, only: [:show]
+  before_action :check_authorization, only: [:edit, :update, :destroy]
   
   def index
     @project = set_project
@@ -61,6 +62,12 @@ class TicketsController < ApplicationController
     
     def set_ticket(project)
       project.tickets.find(params[:id])
+    end
+    
+    def check_authorization
+      project = set_project
+      ticket = set_ticket(project)
+      raise NotAuthorized unless ticket.owner?(current_user)
     end
 
     def form_params
