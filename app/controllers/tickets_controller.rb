@@ -21,7 +21,6 @@ class TicketsController < ApplicationController
     @project = set_project
     @ticket = @project.tickets.new(form_params)
     
-    @ticket.project = @project
     @ticket.owner = current_user
     
     if @ticket.save

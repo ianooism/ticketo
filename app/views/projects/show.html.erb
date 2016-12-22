@@ -5,3 +5,7 @@
 <%= render 'footer' %>
 
 <%= render 'tickets/index', project: @project, tickets: @tickets %>
+
+<h1>Create Ticket</h1>
+
+<%= render 'tickets/form', project: @project, ticket: @ticket %>

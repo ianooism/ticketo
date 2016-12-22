@@ -9,6 +9,8 @@ class ProjectsController < ApplicationController
   def show
     @project = set_project
     @tickets = @project.tickets
+    # don't put unpersisted ticket into project.tickets collection
+    @ticket = Ticket.new(project: @project)
   end
 
   def new
