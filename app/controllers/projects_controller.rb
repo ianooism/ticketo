@@ -8,6 +8,7 @@ class ProjectsController < ApplicationController
 
   def show
     @project = set_project
+    @tickets = @project.tickets
   end
 
   def new
