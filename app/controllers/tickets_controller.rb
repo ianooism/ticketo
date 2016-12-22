@@ -27,7 +27,7 @@ class TicketsController < ApplicationController
     @ticket.owner = current_user
     
     if @ticket.save
-      redirect_to [@project, @ticket], notice: 'Ticket created.'
+      redirect_to @project, notice: 'Ticket created.'
     else
       render 'new'
     end
@@ -49,7 +49,7 @@ class TicketsController < ApplicationController
     @ticket = set_ticket(@project)
     
     @ticket.destroy
-    redirect_to project_tickets_path(@project), notice: 'Ticket destroyed.'
+    redirect_to @project, notice: 'Ticket destroyed.'
   end
 
   private
