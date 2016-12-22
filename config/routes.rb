@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
-  resources :tickets do
-    resources :comments
+  resources :tickets, only: [] do
+    resources :comments, except: [:edit, :update, :destroy]
   end
   resources :projects do
     resources :tickets, except: :index

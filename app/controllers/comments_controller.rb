@@ -15,11 +15,7 @@ class CommentsController < ApplicationController
     @project = @ticket.project
     @comment = Comment.new
   end
-
-  def edit
-    @comment = set_comment
-  end
-
+  
   def create
     @ticket = set_ticket
     @comment = Comment.new(form_params)
@@ -31,23 +27,6 @@ class CommentsController < ApplicationController
     else
       render 'new'
     end
-  end
-
-  def update
-    @comment = set_comment
-    
-    if @comment.update(form_params)
-      redirect_to @comment, notice: 'Comment updated.'
-    else
-      render 'edit'
-    end
-  end
-
-  def destroy
-    @comment = set_comment
-    
-    @comment.destroy
-    redirect_to comments_url, notice: 'Comment destroyed.'
   end
 
   private

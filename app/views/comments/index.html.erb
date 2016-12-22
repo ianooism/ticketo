@@ -4,11 +4,5 @@
 
 <% @comments.each do |comment| %>
   <%= render comment %>
-  
-  <div>
-    <%= link_to 'Show', [@ticket, comment] %> |
-    <%= link_to 'Edit', edit_ticket_comment_path(@ticket, comment) %> | 
-    <%= link_to 'Destroy', @ticket, method: :delete,
-          data: { confirm: 'Are you sure?' } %>
-  </div>
+  <div><%= link_to 'Show', [@ticket, comment] %></div>
 <% end %>
