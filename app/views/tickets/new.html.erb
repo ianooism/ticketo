@@ -1,5 +1,5 @@
 <h1>Create Ticket</h1>
 
-<%= render 'form', ticket: @ticket %>
+<%= render 'form', project: @project, ticket: @ticket %>
 
-<div><%= link_to 'Back', tickets_path %></div>
+<%= render 'footer', project: @project %>
