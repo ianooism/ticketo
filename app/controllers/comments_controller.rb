@@ -8,7 +8,7 @@ class CommentsController < ApplicationController
   def new
     @project = current_project
     @ticket = current_ticket
-    @comment = Comment.new
+    @comment = Comment.new(state_params)
   end
   
   def create
@@ -36,15 +36,23 @@ class CommentsController < ApplicationController
       current_ticket.comments.find(params[:id])
     end
     
+    def state_params
+      { state: current_ticket.state }
+    end
+    
     def comment_params
-      form_params.merge(assoc_params)
+      [route_params, session_params, form_params].inject(:merge)
+    end
+    
+    def route_params
+      { ticket: current_ticket }
+    end
+    
+    def session_params
+      { owner: current_user }
     end
     
     def form_params
-      params.require(:comment).permit(:body)
-    end
-    
-    def assoc_params
-      { ticket: current_ticket, owner: current_user }
+      params.require(:comment).permit(:body, :state_id)
     end
 end

@@ -7,36 +7,33 @@ class ProjectsController < ApplicationController
   end
 
   def show
-    @project = set_project
+    @project = current_project
     @tickets = @project.tickets
-    # don't put unpersisted ticket into project.tickets collection
-    @ticket = Ticket.new(project: @project)
+    @ticket = Ticket.new
   end
 
   def new
     @project = Project.new
   end
 
-  def edit
-    @project = set_project
-  end
-
   def create
-    @project = Project.new(form_params)
+    @project = Project.new
     
-    @project.owner = current_user
-    
-    if @project.save
+    if @project.update(project_params)
       redirect_to projects_url, notice: 'Project created.'
     else
       render 'new'
     end
   end
 
+  def edit
+    @project = current_project
+  end
+
   def update
-    @project = set_project
+    @project = current_project
     
-    if @project.update(form_params)
+    if @project.update(project_params)
       redirect_to @project, notice: 'Project updated.'
     else
       render 'edit'
@@ -44,23 +41,31 @@ class ProjectsController < ApplicationController
   end
 
   def destroy
-    @project = set_project
+    @project = current_project
     
     @project.destroy
     redirect_to projects_url, notice: 'Project destroyed.'
   end
 
   private
-    def set_project
+    def current_project
       Project.find(params[:id])
     end
     
     def check_authorization
-      project = set_project
+      project = current_project
       raise NotAuthorized unless project.owner?(current_user)
     end
-
+    
+    def project_params
+      form_params.merge(session_params)
+    end
+    
     def form_params
       params.require(:project).permit(:name, :description)
+    end
+    
+    def session_params
+      { owner: current_user }
     end
 end
