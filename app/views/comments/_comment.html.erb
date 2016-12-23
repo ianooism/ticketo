@@ -12,3 +12,13 @@
   Owner:
   <%= comment.owner.email %>
 </div>
+
+<div>
+  State:
+  <%= comment.state.name %>
+</div>
+
+<div>
+  Updated:
+  <%= comment.updated_at.to_s(:db) %>
+</div>

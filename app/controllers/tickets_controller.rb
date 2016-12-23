@@ -6,7 +6,7 @@ class TicketsController < ApplicationController
     @project = current_project
     @ticket = current_ticket
     @comments = @ticket.comments
-    @comment = Comment.new
+    @comment = Comment.new(state_params)
   end
   
   def new
@@ -60,6 +60,10 @@ class TicketsController < ApplicationController
     
     def current_ticket
       current_project.tickets.find(params[:id])
+    end
+    
+    def state_params
+      { state: current_ticket.state }
     end
     
     def ticket_params
