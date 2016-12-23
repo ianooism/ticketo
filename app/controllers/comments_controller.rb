@@ -1,46 +1,50 @@
 class CommentsController < ApplicationController
-  def index
-    @ticket = set_ticket
-    @comments = @ticket.comments.all
-  end
-
   def show
-    @ticket = set_ticket
-    @project = @ticket.project
-    @comment = set_comment
+    @project = current_project
+    @ticket = current_ticket
+    @comment = current_comment
   end
 
   def new
-    @ticket = set_ticket
-    @project = @ticket.project
+    @project = current_project
+    @ticket = current_ticket
     @comment = Comment.new
   end
   
   def create
-    @ticket = set_ticket
+    @project = current_project
+    @ticket = current_ticket
     @comment = Comment.new
-    @comment.attributes = form_params.merge(assoc_params)
-    if @comment.save
-      redirect_to [@ticket, @comment], notice: 'Comment created.'
+    
+    if @comment.update(comment_params)
+      redirect_to [@project, @ticket], notice: 'Comment created.'
     else
-      render 'new'
+      render :new
     end
   end
 
   private
-    def set_ticket
+    def current_ticket
       Ticket.find(params[:ticket_id])
     end
     
-    def set_comment
-      set_ticket.comments.find(params[:id])
+    def current_project
+      current_ticket.project
     end
     
-    def assoc_params
-      { ticket: @ticket, owner: current_user }
+    def current_comment
+      current_ticket.comments.find(params[:id])
+    end
+    
+    def comment_params
+      form_params.merge(assoc_params)
     end
     
     def form_params
       params.require(:comment).permit(:body)
+    end
+    
+    def assoc_params
+      { ticket: current_ticket, owner: current_user }
     end
 end
