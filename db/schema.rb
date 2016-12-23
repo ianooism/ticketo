@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161223084329) do
+ActiveRecord::Schema.define(version: 20161223095850) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -19,10 +19,12 @@ ActiveRecord::Schema.define(version: 20161223084329) do
     t.text     "body"
     t.integer  "ticket_id"
     t.integer  "owner_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
     t.integer  "state_id"
+    t.integer  "previous_state_id"
     t.index ["owner_id"], name: "index_comments_on_owner_id", using: :btree
+    t.index ["previous_state_id"], name: "index_comments_on_previous_state_id", using: :btree
     t.index ["state_id"], name: "index_comments_on_state_id", using: :btree
     t.index ["ticket_id"], name: "index_comments_on_ticket_id", using: :btree
   end
@@ -74,6 +76,7 @@ ActiveRecord::Schema.define(version: 20161223084329) do
   end
 
   add_foreign_key "comments", "states"
+  add_foreign_key "comments", "states", column: "previous_state_id"
   add_foreign_key "comments", "tickets"
   add_foreign_key "comments", "users", column: "owner_id"
   add_foreign_key "projects", "users", column: "owner_id"
