@@ -3,68 +3,72 @@ class TicketsController < ApplicationController
   before_action :check_authorization, only: [:edit, :update, :destroy]
 
   def show
-    @project = set_project
-    @ticket = set_ticket(@project)
+    @project = current_project
+    @ticket = current_ticket
   end
 
   def new
-    @project = set_project
-    @ticket = @project.tickets.new
+    @project = current_project
+    @ticket = Ticket.new
   end
-
-  def edit
-    @project = set_project
-    @ticket = set_ticket(@project)
-  end
-
+  
   def create
-    @project = set_project
-    @ticket = @project.tickets.new(form_params)
+    @project = current_project
+    @ticket = Ticket.new
     
-    @ticket.owner = current_user
-    
-    if @ticket.save
+    if @ticket.update(ticket_params)
       redirect_to @project, notice: 'Ticket created.'
     else
       render 'new'
     end
   end
 
+  def edit
+    @project = current_project
+    @ticket = current_ticket
+  end
+
   def update
-    @project = set_project
-    @ticket = set_ticket(@project)
+    @project = current_project
+    @ticket = current_ticket
     
-    if @ticket.update(form_params)
-      redirect_to [@project, @ticket], notice: 'Ticket updated.'
+    if @ticket.update(ticket_params)
+      redirect_to @project, notice: 'Ticket updated.'
     else
       render 'edit'
     end
   end
 
   def destroy
-    @project = set_project
-    @ticket = set_ticket(@project)
+    @project = current_project
+    @ticket = current_ticket
     
     @ticket.destroy
     redirect_to @project, notice: 'Ticket destroyed.'
   end
 
   private
-    def set_project
+    def check_authorization
+      raise NotAuthorized unless current_ticket.owner?(current_user)
+    end
+    
+    def current_project
       Project.find(params[:project_id])
     end
     
-    def set_ticket(project)
-      project.tickets.find(params[:id])
+    def current_ticket
+      current_project.tickets.find(params[:id])
     end
     
-    def check_authorization
-      project = set_project
-      ticket = set_ticket(project)
-      raise NotAuthorized unless ticket.owner?(current_user)
+    def ticket_params
+      form_params.merge(association_params)
     end
-
+    
     def form_params
       params.require(:ticket).permit(:name, :description)
+    end
+    
+    def association_params
+      { project: current_project, owner: current_user }
     end
 end
