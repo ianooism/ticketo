@@ -11,7 +11,7 @@ class TicketsController < ApplicationController
   
   def new
     @project = current_project
-    @ticket = Ticket.new
+    @ticket = Ticket.new(state_params)
   end
   
   def create
