@@ -1,0 +1,25 @@
+<%= form_for([ticket, comment]) do |f| %>
+  <% if comment.errors.any? %>
+    <div>
+      <h2>
+        <%= pluralize(comment.errors.count, "error") %>
+            prevented this comment from being saved:
+      </h2>
+      
+      <ul>
+        <% comment.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= f.label :body %>
+    <%= f.text_area :body %>
+  </div>
+
+  <div>
+    <%= f.submit %>
+  </div>
+<% end %>
