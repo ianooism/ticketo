@@ -7,9 +7,9 @@ class Ticket < ApplicationRecord
   
   has_many :comments
   
-  after_initialize :set_state, if: :new_record?
-  
   validates :name, presence: true
+  
+  after_initialize :set_state, if: :new_record?
   
   private
     def set_state
