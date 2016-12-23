@@ -16,25 +16,25 @@ class <%= controller_class_name %>Controller < ApplicationController
     @<%= singular_table_name %> = <%= orm_class.build(class_name) %>
   end
 
-  def edit
-    @<%= singular_table_name %> = set_<%= singular_table_name %>
-  end
-
   def create
-    @<%= singular_table_name %> = <%= orm_class.build(class_name, "#{singular_table_name}_params") %>
+    @<%= singular_table_name %> = <%= orm_class.build(class_name, "form_params") %>
     
     if @<%= orm_instance.save %>
-      redirect_to @<%= singular_table_name %>, notice: <%= "'#{human_name} created.'" %>
+      redirect_to <%= index_helper %>_url, notice: <%= "'#{human_name} created.'" %>
     else
       render 'new'
     end
+  end
+  
+  def edit
+    @<%= singular_table_name %> = set_<%= singular_table_name %>
   end
 
   def update
     @<%= singular_table_name %> = set_<%= singular_table_name %>
     
-    if @<%= orm_instance.update("#{singular_table_name}_params") %>
-      redirect_to @<%= singular_table_name %>, notice: <%= "'#{human_name} updated.'" %>
+    if @<%= orm_instance.update("form_params") %>
+      redirect_to <%= index_helper %>_url, notice: <%= "'#{human_name} updated.'" %>
     else
       render 'edit'
     end
@@ -52,7 +52,7 @@ class <%= controller_class_name %>Controller < ApplicationController
       <%= orm_class.find(class_name, "params[:id]") %>
     end
 
-    def <%= "#{singular_table_name}_params" %>
+    def <%= "form_params" %>
       <%- if attributes_names.empty? -%>
       params.fetch(:<%= singular_table_name %>, {})
       <%- else -%>

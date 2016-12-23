@@ -5,7 +5,6 @@
         <%%= pluralize(<%= singular_table_name %>.errors.count, "error") %>
             prevented this <%= singular_table_name %> from being saved:
       </h2>
-      
       <ul>
         <%% <%= singular_table_name %>.errors.full_messages.each do |message| %>
           <li><%%= message %></li>
