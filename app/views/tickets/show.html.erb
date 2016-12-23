@@ -3,3 +3,9 @@
 <%= render @ticket %>
 
 <%= render 'footer', project: @project %>
+
+<%= render 'comments/index', ticket: @ticket, comments: @comments %>
+
+<h1>Create Comment</h1>
+
+<%= render 'comments/form', ticket: @ticket, comment: @comment %>

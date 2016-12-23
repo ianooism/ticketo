@@ -5,8 +5,10 @@ class TicketsController < ApplicationController
   def show
     @project = current_project
     @ticket = current_ticket
+    @comments = @ticket.comments
+    @comment = Comment.new
   end
-
+  
   def new
     @project = current_project
     @ticket = Ticket.new

@@ -1,9 +1,4 @@
 class CommentsController < ApplicationController
-  def index
-    @ticket = current_ticket
-    @comments = @ticket.comments.all
-  end
-
   def show
     @project = current_project
     @ticket = current_ticket
@@ -17,13 +12,14 @@ class CommentsController < ApplicationController
   end
   
   def create
+    @project = current_project
     @ticket = current_ticket
     @comment = Comment.new
     
     if @comment.update(comment_params)
-      redirect_to({action: 'index'}, notice: 'Comment created.')
+      redirect_to [@project, @ticket], notice: 'Comment created.'
     else
-      render 'new'
+      render :new
     end
   end
 
