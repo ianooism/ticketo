@@ -67,14 +67,18 @@ class TicketsController < ApplicationController
     end
     
     def ticket_params
-      form_params.merge(association_params)
+      [route_params, session_params, form_params].inject(:merge)
+    end
+    
+    def route_params
+      { project: current_project }
+    end
+    
+    def session_params
+      { owner: current_user }
     end
     
     def form_params
       params.require(:ticket).permit(:name, :description)
-    end
-    
-    def association_params
-      { project: current_project, owner: current_user }
     end
 end

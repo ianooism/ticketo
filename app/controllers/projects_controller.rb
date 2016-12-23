@@ -58,14 +58,14 @@ class ProjectsController < ApplicationController
     end
     
     def project_params
-      form_params.merge(assoc_params)
+      form_params.merge(session_params)
     end
     
     def form_params
       params.require(:project).permit(:name, :description)
     end
     
-    def assoc_params
+    def session_params
       { owner: current_user }
     end
 end

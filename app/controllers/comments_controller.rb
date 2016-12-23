@@ -41,14 +41,18 @@ class CommentsController < ApplicationController
     end
     
     def comment_params
-      form_params.merge(assoc_params)
+      [route_params, session_params, form_params].inject(:merge)
+    end
+    
+    def route_params
+      { ticket: current_ticket }
+    end
+    
+    def session_params
+      { owner: current_user }
     end
     
     def form_params
       params.require(:comment).permit(:body, :state_id)
-    end
-    
-    def assoc_params
-      { ticket: current_ticket, owner: current_user }
     end
 end
