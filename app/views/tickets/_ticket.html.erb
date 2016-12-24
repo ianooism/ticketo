@@ -22,3 +22,15 @@
   State:
   <%= ticket.state.name %>
 </div>
+
+<div>
+  Tags:
+  <% if ticket.tags.empty? %>
+    none
+  <% else %>
+    <% ticket.tags.each_with_index do |tag, index| %>
+      <%= link_to tag.name, '#' %>
+      <%= ' | ' unless index == ticket.tags.size-1 %>
+    <% end %>
+  <% end %>
+</div>
