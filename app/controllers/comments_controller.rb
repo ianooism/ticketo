@@ -1,13 +1,11 @@
 class CommentsController < ApplicationController
   def show
-    locals = { ticket: ticket, project: project }
-    render :show, locals: locals
+    render :show, locals: { ticket: ticket, project: project }
   end
 
   def new
-    locals = { comment: Comment.new(state_params), ticket: ticket,
-                project: project }
-    render :new, locals: locals
+    comment = Comment.new(state_params)
+    render :new, locals: { comment: comment, ticket: ticket, project: project }
   end
   
   def create
@@ -15,8 +13,7 @@ class CommentsController < ApplicationController
     if comment.update(comment_params)
       redirect_to [project, ticket], notice: 'Comment created.'
     else
-      locals = { comment: comment, ticket: ticket, project: project }
-      render :new, locals: locals
+      render :new, locals: { comment: comment, ticket: ticket, project: project }
     end
   end
 

@@ -3,49 +3,35 @@ class TicketsController < ApplicationController
   before_action :check_authorization, only: [:edit, :update, :destroy]
 
   def show
+    comment = Comment.new(state_params)
     render :show,
-            locals: {
-              ticket: ticket,
-              project: project,
-              comments: ticket.comments,
-              comment: Comment.new(state_params) }
+            locals: { ticket: ticket, project: project,
+              comments: ticket.comments, comment: comment }
   end
   
   def new
-    render :new,
-            locals: {
-              ticket: Ticket.new,
-              project: project }
+    ticket = Ticket.new
+    render :new, locals: { ticket: ticket, project: project }
   end
   
   def create
     ticket = Ticket.new
-    
     if ticket.update(ticket_params)
       redirect_to project, notice: 'Ticket created.'
     else
-      render :new,
-              locals: {
-                ticket: ticket,
-                project: project }
+      render :new, locals: { ticket: ticket, project: project }
     end
   end
 
   def edit
-    render :edit,
-            locals: {
-              ticket: ticket,
-              project: project }
+    render :edit, locals: { ticket: ticket, project: project }
   end
 
   def update
     if ticket.update(ticket_params)
       redirect_to project, notice: 'Ticket updated.'
     else
-      render :edit,
-              locals: {
-                ticket: ticket,
-                project: project }
+      render :edit, locals: { ticket: ticket, project: project }
     end
   end
 
