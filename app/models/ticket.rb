@@ -6,6 +6,9 @@ class Ticket < ApplicationRecord
   belongs_to :state
   
   has_many :comments, dependent: :destroy
+  has_and_belongs_to_many :tags, -> { distinct }
+  
+  attr_accessor :tag_names
   
   validates :name, presence: true
   
