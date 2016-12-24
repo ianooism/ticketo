@@ -2,7 +2,7 @@
 
 <%= render project %>
 <div>
-  <%= render 'actions' %>
+  <%= render 'footer' %>
   <% if project.owner?(current_user) %>
     | <%= render 'actions_owner', project: project %>
   <% end %>
