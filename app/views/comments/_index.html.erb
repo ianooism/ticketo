@@ -1,6 +1,8 @@
 <h1>Comments</h1>
 
-<div><%= link_to 'Create Comment', new_ticket_comment_path(ticket) %></div>
+<% if ! comments.empty? %>
+  <div><%= link_to 'Create Comment', new_ticket_comment_path(ticket) %></div>
+<% end %>
 
 <% comments.each do |comment| %>
   <%= render comment %>

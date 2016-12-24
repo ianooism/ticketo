@@ -1,6 +1,8 @@
 <h1>Tickets</h1>
 
-<div><%= link_to 'Create Ticket', new_project_ticket_path(project) %></div>
+<% if ! tickets.empty? %>
+  <div><%= link_to 'Create Ticket', new_project_ticket_path(project) %></div>
+<% end %>
 
 <% tickets.each do |ticket| %>
   <%= render ticket %>
