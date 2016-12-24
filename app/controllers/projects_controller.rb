@@ -3,15 +3,15 @@ class ProjectsController < ApplicationController
   before_action :check_authorization, only: [:edit, :update, :destroy]
   
   def index
-    projects = Project.all.order("created_at desc")
+    projects = Project.all.order('created_at desc')
     render :index, locals: { projects: projects }
   end
 
   def show
+    tickets = project.tickets.order('created_at desc')
     ticket = Ticket.new
     render :show,
-            locals: { project: project, tickets: project.tickets,
-              ticket: ticket }
+            locals: { project: project, tickets: tickets, ticket: ticket }
   end
 
   def new

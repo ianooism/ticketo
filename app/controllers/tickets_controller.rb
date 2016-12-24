@@ -3,10 +3,11 @@ class TicketsController < ApplicationController
   before_action :check_authorization, only: [:edit, :update, :destroy]
 
   def show
+    comments = ticket.comments
     comment = Comment.new(state_params)
     render :show,
-            locals: { ticket: ticket, project: project,
-              comments: ticket.comments, comment: comment }
+            locals: { ticket: ticket, project: project, comments: comments,
+              comment: comment }
   end
   
   def new
