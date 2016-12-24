@@ -13,17 +13,22 @@
       </ul>
     </div>
   <% end %>
-
+  
   <div>
     <%= f.label :name %>
     <%= f.text_field :name %>
   </div>
-
+  
   <div>
     <%= f.label :description %>
     <%= f.text_area :description %>
   </div>
-
+  
+  <div>
+    <%= f.label :tag_names %>
+    <%= f.text_field :tag_names %>
+  </div>
+  
   <div>
     <%= f.submit %>
   </div>

@@ -55,7 +55,7 @@ class TicketsController < ApplicationController
     end
     
     def state_params
-      { state: ticket.state }
+      { state: ticket.state }.permit(:state)
     end
     
     def ticket_params
@@ -71,6 +71,6 @@ class TicketsController < ApplicationController
     end
     
     def form_params
-      params.require(:ticket).permit(:name, :description)
+      params.require(:ticket).permit(:name, :description, :tag_names).to_h
     end
 end
