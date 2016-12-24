@@ -2,7 +2,7 @@
 
 <div><%= link_to 'Create Project', new_project_path %></div>
 
-<% @projects.order("created_at desc").each do |project| %>
+<% projects.each do |project| %>
   <%= render 'project', project: project %>
   
   <div>

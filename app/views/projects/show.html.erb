@@ -1,11 +1,11 @@
 <h1>Project</h1>
 
-<%= render 'project', project: @project %>
+<%= render 'project', project: project %>
 
 <%= render 'footer' %>
 
-<%= render 'tickets/index', project: @project, tickets: @tickets %>
+<%= render 'tickets/index', project: project, tickets: tickets %>
 
 <h1>Create Ticket</h1>
 
-<%= render 'tickets/form', project: @project, ticket: @ticket %>
+<%= render 'tickets/form', project: project, ticket: ticket %>
