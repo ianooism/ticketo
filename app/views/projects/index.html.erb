@@ -1,13 +1,19 @@
 <h1>Projects</h1>
 
-<div><%= link_to 'Create Project', new_project_path %></div>
+<div class="section">
+  <%= link_to 'Create Project', new_project_path %>
+</div>
 
-<% projects.each do |project| %>
-  <%= render project %>
-  <div>
-    <%= link_to 'Show', project %>
-    <% if project.owner?(current_user) %>
-      | <%= render 'actions_owner', project: project %>
-    <% end %>
-  </div>
-<% end %>
+<div class="section">
+  <% projects.each_with_index do |project, index| %>
+    <div class="section">
+      <%= render project %>
+      <div>
+        <%= link_to 'Show', project %>
+        <% if project.owner?(current_user) %>
+          | <%= render 'actions_owner', project: project %>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>

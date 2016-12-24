@@ -1,10 +1,14 @@
 <h1>Comments</h1>
 
 <% if ! comments.empty? %>
-  <div><%= link_to 'Create Comment', new_ticket_comment_path(ticket) %></div>
+  <div class="section">
+    <%= link_to 'Create Comment', new_ticket_comment_path(ticket) %>
+  </div>
 <% end %>
 
-<% comments.each do |comment| %>
-  <%= render comment %>
-  <div><%= link_to 'Show', [ticket, comment] %></div>
+<% comments.each_with_index do |comment, index| %>
+  <div class="section">
+    <%= render comment %>
+    <div><%= link_to 'Show', [ticket, comment] %></div>
+  </div>
 <% end %>
