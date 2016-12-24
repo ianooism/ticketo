@@ -1,43 +1,40 @@
 class CommentsController < ApplicationController
   def show
-    @project = current_project
-    @ticket = current_ticket
-    @comment = current_comment
+    locals = { ticket: ticket, project: project }
+    render :show, locals: locals
   end
 
   def new
-    @project = current_project
-    @ticket = current_ticket
-    @comment = Comment.new(state_params)
+    locals = { comment: Comment.new(state_params), ticket: ticket,
+                project: project }
+    render :new, locals: locals
   end
   
   def create
-    @project = current_project
-    @ticket = current_ticket
-    @comment = Comment.new
-    
-    if @comment.update(comment_params)
-      redirect_to [@project, @ticket], notice: 'Comment created.'
+    comment = Comment.new
+    if comment.update(comment_params)
+      redirect_to [project, ticket], notice: 'Comment created.'
     else
-      render :new
+      locals = { comment: comment, ticket: ticket, project: project }
+      render :new, locals: locals
     end
   end
 
   private
-    def current_ticket
+    def comment
+      ticket.comments.find(params[:id])
+    end
+    
+    def ticket
       Ticket.find(params[:ticket_id])
     end
     
-    def current_project
-      current_ticket.project
-    end
-    
-    def current_comment
-      current_ticket.comments.find(params[:id])
+    def project
+      ticket.project
     end
     
     def state_params
-      { state: current_ticket.state }
+      { state: ticket.state }
     end
     
     def comment_params
@@ -45,7 +42,7 @@ class CommentsController < ApplicationController
     end
     
     def route_params
-      { ticket: current_ticket }
+      { ticket: ticket }
     end
     
     def session_params
