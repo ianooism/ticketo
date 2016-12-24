@@ -3,14 +3,11 @@
 <div><%= link_to 'Create Project', new_project_path %></div>
 
 <% projects.each do |project| %>
-  <%= render 'project', project: project %>
-  
+  <%= render project %>
   <div>
     <%= link_to 'Show', project %>
     <% if project.owner?(current_user) %>
-      | <%= link_to 'Edit', edit_project_path(project) %>
-      | <%= link_to 'Destroy', project, method: :delete,
-            data: { confirm: 'Are you sure?' } %>
+      | <%= render 'actions_owner', project: project %>
     <% end %>
   </div>
 <% end %>
