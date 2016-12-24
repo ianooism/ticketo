@@ -1,11 +1,15 @@
 <h1>Project</h1>
 
-<%= render 'project', project: @project %>
+<%= render project %>
+<div>
+  <%= render 'footer' %>
+  <% if project.owner?(current_user) %>
+    | <%= render 'actions_owner', project: project %>
+  <% end %>
+</div>
 
-<%= render 'footer' %>
-
-<%= render 'tickets/index', project: @project, tickets: @tickets %>
+<%= render 'tickets/index', project: project, tickets: tickets %>
 
 <h1>Create Ticket</h1>
 
-<%= render 'tickets/form', project: @project, ticket: @ticket %>
+<%= render 'tickets/form', project: project, ticket: ticket %>

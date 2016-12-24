@@ -3,69 +3,66 @@ class ProjectsController < ApplicationController
   before_action :check_authorization, only: [:edit, :update, :destroy]
   
   def index
-    @projects = Project.all
+    projects = Project.all.order('created_at desc')
+    render :index, locals: { projects: projects }
   end
 
   def show
-    @project = current_project
-    @tickets = @project.tickets
-    @ticket = Ticket.new
+    tickets = project.tickets.order('created_at desc')
+    ticket = Ticket.new
+    render :show,
+            locals: { project: project, tickets: tickets, ticket: ticket }
   end
 
   def new
-    @project = Project.new
+    project = Project.new
+    render :new, locals: { project: project }
   end
 
   def create
-    @project = Project.new
-    
-    if @project.update(project_params)
+    project = Project.new
+    if project.update(project_params)
       redirect_to projects_url, notice: 'Project created.'
     else
-      render 'new'
+      render :new, locals: { project: project }
     end
   end
 
   def edit
-    @project = current_project
+    render :edit, locals: { project: project }
   end
 
   def update
-    @project = current_project
-    
-    if @project.update(project_params)
-      redirect_to @project, notice: 'Project updated.'
+    if project.update(project_params)
+      redirect_to projects_url, notice: 'Project updated.'
     else
-      render 'edit'
+      render :edit, locals: { project: project }
     end
   end
 
   def destroy
-    @project = current_project
-    
-    @project.destroy
+    project.destroy
     redirect_to projects_url, notice: 'Project destroyed.'
   end
 
   private
-    def current_project
+    def project
       Project.find(params[:id])
     end
     
     def check_authorization
-      project = current_project
       raise NotAuthorized unless project.owner?(current_user)
     end
     
     def project_params
-      form_params.merge(session_params)
-    end
-    
-    def form_params
-      params.require(:project).permit(:name, :description)
+      [session_params, form_params].inject(:merge)
     end
     
     def session_params
       { owner: current_user }
+    end
+    
+    def form_params
+      params.require(:project).permit(:name, :description)
     end
 end
