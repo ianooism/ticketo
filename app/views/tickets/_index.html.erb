@@ -6,9 +6,9 @@
   </div>
 <% end %>
 
-<% tickets.each do |ticket| %>
+<% tickets.order('created_at asc').each do |ticket| %>
   <div class="section">
-    <%= render ticket %>
+    <%= render ticket, tags: ticket.tags %>
     <div>
       <%= link_to 'Show', [project, ticket] %>
       <% if ticket.owner?(current_user) %>

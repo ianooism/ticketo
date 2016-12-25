@@ -4,7 +4,7 @@
   <%= link_to 'Create Project', new_project_path %>
 </div>
 
-<% projects.each do |project| %>
+<% projects.order('created_at asc').each do |project| %>
   <div class="section">
     <%= render project %>
     <div>

@@ -1,39 +1,39 @@
 class CommentsController < ApplicationController
   def show
-    render :show, locals: { ticket: ticket, project: project }
+    render :show, locals: { project: current_project,
+                            ticket: current_ticket }
   end
-
+  
   def new
-    new_comment = Comment.new(new_comment_params)
-    render :new,
-            locals: { comment: new_comment, ticket: ticket, project: project }
+    render :new, locals: { project: current_project,
+                           ticket: current_ticket,
+                           comment: Comment.new(new_comment_params) }
   end
   
   def create
     new_comment = Comment.new(new_comment_params)
+    
     if new_comment.update(comment_form_params)
-      redirect_to [project, ticket], notice: 'Comment created.'
+      redirect_to [current_project, current_ticket], notice: 'Comment created.'
     else
-      render :new,
-              locals: { comment: new_comment, ticket: ticket, project: project }
+      render :new, locals: { project: current_project,
+                             ticket: current_ticket,
+                             comment: new_comment }
     end
   end
 
   private
-    def ticket
-      Ticket.find(params[:ticket_id])
+    def current_ticket
+      @ticket ||= Ticket.find(params[:ticket_id])
     end
     
-    def comment
-      ticket.comments.find(params[:id])
-    end
-    
-    def project
-      ticket.project
+    def current_project
+      @project ||= current_ticket.project
     end
     
     def new_comment_params
-      { ticket: ticket, owner: current_user }
+      { ticket: current_ticket,
+        owner: current_user }
     end
     
     def comment_form_params

@@ -1,27 +1,24 @@
 class ProjectsController < ApplicationController
   skip_before_action :authenticate_user!, only: [:index, :show]
-  before_action :check_authorization, only: [:edit, :update, :destroy]
+  before_action :authorize_user, only: [:edit, :update, :destroy]
   
   def index
-    projects = Project.all.order('created_at desc')
-    render :index, locals: { projects: projects }
+    render :index, locals: { projects: Project.all }
   end
 
   def show
-    tickets = project.tickets.order('created_at desc')
-    new_ticket = Ticket.new(new_ticket_params)
-    render :show,
-            locals: { project: project, tickets: tickets, ticket: new_ticket }
+    render :show, locals: { project: current_project,
+                            ticket: Ticket.new(new_ticket_params) }
   end
 
   def new
-    new_project = Project.new(new_project_params)
-    render :new, locals: { project: new_project }
+    render :new, locals: { project: Project.new(new_project_params) }
   end
 
   def create
     new_project = Project.new(new_project_params)
-    if new_project.update(form_params)
+    
+    if new_project.update(project_form_params)
       redirect_to projects_url, notice: 'Project created.'
     else
       render :new, locals: { project: new_project }
@@ -29,29 +26,29 @@ class ProjectsController < ApplicationController
   end
 
   def edit
-    render :edit, locals: { project: project }
+    render :edit, locals: { project: current_project }
   end
 
   def update
-    if project.update(form_params)
+    if current_project.update(project_form_params)
       redirect_to projects_url, notice: 'Project updated.'
     else
-      render :edit, locals: { project: project }
+      render :edit, locals: { project: current_project }
     end
   end
 
   def destroy
-    project.destroy
+    current_project.destroy
     redirect_to projects_url, notice: 'Project destroyed.'
   end
 
   private
-    def check_authorization
-      raise NotAuthorized unless project.owner?(current_user)
+    def authorize_user
+      raise NotAuthorized unless current_project.owner?(current_user)
     end
     
-    def project
-      Project.find(params[:id])
+    def current_project
+      @project ||= Project.find(params[:id])
     end
     
     def new_project_params
@@ -59,10 +56,11 @@ class ProjectsController < ApplicationController
     end
     
     def new_ticket_params
-      { project: project, owner: current_user }
+      { project: current_project,
+        owner: current_user }
     end
     
-    def form_params
+    def project_form_params
       params.require(:project).permit(:name, :description)
     end
 end

@@ -25,8 +25,8 @@
 
 <div>
   Tags:
-  <% if ! ticket.tags.empty? %>
-    <%= ticket.tags.map do |tag| %>
+  <% if ! tags.empty? %>
+    <%= tags.map do |tag| %>
       <% link_to tag.name %>
     <% end.join(' | ').html_safe %>
   <% else %>
