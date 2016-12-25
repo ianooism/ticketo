@@ -1,7 +1,9 @@
 Rails.application.routes.draw do
   resources :tickets, only: [] do
     resources :comments, except: [:index, :edit, :update, :destroy]
+    resources :tags, only: :destroy
   end
+  
   resources :projects do
     resources :tickets, except: :index
   end
