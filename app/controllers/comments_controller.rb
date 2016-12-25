@@ -4,13 +4,13 @@ class CommentsController < ApplicationController
   end
 
   def new
-    comment = Comment.new(state_params)
+    comment = Comment.new(new_comment_params)
     render :new, locals: { comment: comment, ticket: ticket, project: project }
   end
   
   def create
-    comment = Comment.new
-    if comment.update(comment_params)
+    comment = Comment.new(new_comment_params)
+    if comment.update(comment_form_params)
       redirect_to [project, ticket], notice: 'Comment created.'
     else
       render :new, locals: { comment: comment, ticket: ticket, project: project }
@@ -30,23 +30,11 @@ class CommentsController < ApplicationController
       ticket.project
     end
     
-    def state_params
-      { state: ticket.state }
+    def new_comment_params
+      { ticket: ticket, owner: current_user }
     end
     
-    def comment_params
-      [route_params, session_params, form_params].inject(:merge)
-    end
-    
-    def route_params
-      { ticket: ticket }
-    end
-    
-    def session_params
-      { owner: current_user }
-    end
-    
-    def form_params
-      params.require(:comment).permit(:body, :state_id)
+    def comment_form_params
+      params.require(:comment).permit(:body, :state_id, :tag_names).to_h
     end
 end

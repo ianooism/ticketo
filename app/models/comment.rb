@@ -6,10 +6,26 @@ class Comment < ApplicationRecord
   
   validates :body, presence: true
   
+  after_initialize :set_state, if: :new_record?
   before_validation :set_previous_state, if: :new_record?
   after_save :set_state_on_ticket
   
+  def tag_names
+    @tag_names = ticket.tags.map(&:name).join(' ')
+  end
+  
+  def tag_names=(names)
+    @tag_names = names
+    names.split.each do |name|
+      ticket.tags << Tag.find_or_initialize_by(name: name)
+    end
+  end
+  
   private
+    def set_state
+      self.state = ticket.state
+    end
+    
     def set_previous_state
       self.previous_state = ticket.state
     end

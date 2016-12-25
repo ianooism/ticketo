@@ -4,20 +4,20 @@ class TicketsController < ApplicationController
 
   def show
     comments = ticket.comments
-    comment = Comment.new(state_params)
+    comment = Comment.new(new_comment_params)
     render :show,
             locals: { ticket: ticket, project: project, comments: comments,
               comment: comment }
   end
   
   def new
-    ticket = Ticket.new
+    ticket = Ticket.new(new_ticket_params)
     render :new, locals: { ticket: ticket, project: project }
   end
   
   def create
-    ticket = Ticket.new
-    if ticket.update(ticket_params)
+    ticket = Ticket.new(new_ticket_params)
+    if ticket.update(ticket_form_params)
       redirect_to project, notice: 'Ticket created.'
     else
       render :new, locals: { ticket: ticket, project: project }
@@ -29,7 +29,7 @@ class TicketsController < ApplicationController
   end
 
   def update
-    if ticket.update(ticket_params)
+    if ticket.update(ticket_form_params)
       redirect_to project, notice: 'Ticket updated.'
     else
       render :edit, locals: { ticket: ticket, project: project }
@@ -54,23 +54,15 @@ class TicketsController < ApplicationController
       project.tickets.find(params[:id])
     end
     
-    def state_params
-      { state: ticket.state }.permit(:state)
+    def new_comment_params
+      { ticket: ticket, owner: current_user }
     end
     
-    def ticket_params
-      [route_params, session_params, form_params].inject(:merge)
+    def new_ticket_params
+      { project: project, owner: current_user }
     end
     
-    def route_params
-      { project: project }
-    end
-    
-    def session_params
-      { owner: current_user }
-    end
-    
-    def form_params
+    def ticket_form_params
       params.require(:ticket).permit(:name, :description, :tag_names).to_h
     end
 end

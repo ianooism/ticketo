@@ -14,11 +14,14 @@
 </div>
 
 <div>
-  State changed from
-  <%= comment.previous_state.name %> to <%= comment.state.name %>
+  State:
+  <%= comment.previous_state.name == comment.state.name ? \
+      comment.state.name : \
+      "#{comment.previous_state.name} to #{comment.state.name}" %>
 </div>
 
 <div>
   Updated:
-  <%= comment.updated_at.to_s(:db) %>
+  <%= time_ago_in_words(comment.updated_at) %>
+  ago
 </div>
