@@ -9,22 +9,22 @@ class ProjectsController < ApplicationController
 
   def show
     tickets = project.tickets.order('created_at desc')
-    ticket = Ticket.new(new_ticket_params)
+    new_ticket = Ticket.new(new_ticket_params)
     render :show,
-            locals: { project: project, tickets: tickets, ticket: ticket }
+            locals: { project: project, tickets: tickets, ticket: new_ticket }
   end
 
   def new
-    project = Project.new(new_project_params)
-    render :new, locals: { project: project }
+    new_project = Project.new(new_project_params)
+    render :new, locals: { project: new_project }
   end
 
   def create
-    project = Project.new(new_project_params)
-    if project.update(form_params)
+    new_project = Project.new(new_project_params)
+    if new_project.update(form_params)
       redirect_to projects_url, notice: 'Project created.'
     else
-      render :new, locals: { project: project }
+      render :new, locals: { project: new_project }
     end
   end
 
@@ -46,12 +46,12 @@ class ProjectsController < ApplicationController
   end
 
   private
-    def project
-      Project.find(params[:id])
-    end
-    
     def check_authorization
       raise NotAuthorized unless project.owner?(current_user)
+    end
+    
+    def project
+      Project.find(params[:id])
     end
     
     def new_project_params

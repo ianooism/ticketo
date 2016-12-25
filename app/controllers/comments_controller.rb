@@ -4,26 +4,28 @@ class CommentsController < ApplicationController
   end
 
   def new
-    comment = Comment.new(new_comment_params)
-    render :new, locals: { comment: comment, ticket: ticket, project: project }
+    new_comment = Comment.new(new_comment_params)
+    render :new,
+            locals: { comment: new_comment, ticket: ticket, project: project }
   end
   
   def create
-    comment = Comment.new(new_comment_params)
-    if comment.update(comment_form_params)
+    new_comment = Comment.new(new_comment_params)
+    if new_comment.update(comment_form_params)
       redirect_to [project, ticket], notice: 'Comment created.'
     else
-      render :new, locals: { comment: comment, ticket: ticket, project: project }
+      render :new,
+              locals: { comment: new_comment, ticket: ticket, project: project }
     end
   end
 
   private
-    def comment
-      ticket.comments.find(params[:id])
-    end
-    
     def ticket
       Ticket.find(params[:ticket_id])
+    end
+    
+    def comment
+      ticket.comments.find(params[:id])
     end
     
     def project
@@ -35,6 +37,6 @@ class CommentsController < ApplicationController
     end
     
     def comment_form_params
-      params.require(:comment).permit(:body, :state_id, :tag_names).to_h
+      params.require(:comment).permit(:body, :state_id, :tag_names)
     end
 end
