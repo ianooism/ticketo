@@ -9,19 +9,19 @@ class ProjectsController < ApplicationController
 
   def show
     tickets = project.tickets.order('created_at desc')
-    ticket = Ticket.new
+    ticket = Ticket.new(new_ticket_params)
     render :show,
             locals: { project: project, tickets: tickets, ticket: ticket }
   end
 
   def new
-    project = Project.new
+    project = Project.new(new_project_params)
     render :new, locals: { project: project }
   end
 
   def create
-    project = Project.new
-    if project.update(project_params)
+    project = Project.new(new_project_params)
+    if project.update(form_params)
       redirect_to projects_url, notice: 'Project created.'
     else
       render :new, locals: { project: project }
@@ -33,7 +33,7 @@ class ProjectsController < ApplicationController
   end
 
   def update
-    if project.update(project_params)
+    if project.update(form_params)
       redirect_to projects_url, notice: 'Project updated.'
     else
       render :edit, locals: { project: project }
@@ -54,12 +54,12 @@ class ProjectsController < ApplicationController
       raise NotAuthorized unless project.owner?(current_user)
     end
     
-    def project_params
-      [session_params, form_params].inject(:merge)
+    def new_project_params
+      { owner: current_user }
     end
     
-    def session_params
-      { owner: current_user }
+    def new_ticket_params
+      { project: project, owner: current_user }
     end
     
     def form_params

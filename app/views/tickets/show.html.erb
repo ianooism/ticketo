@@ -1,8 +1,12 @@
 <h1>Ticket</h1>
 
 <%= render ticket %>
-
-<%= render 'footer', project: project %>
+<div>
+  <%= render 'footer', project: project %>
+  <% if ticket.owner?(current_user) %>
+    | <%= render 'actions_owner', project: project, ticket: ticket %>
+  <% end %>
+</div>
 
 <%= render 'comments/index', ticket: ticket, comments: comments %>
 

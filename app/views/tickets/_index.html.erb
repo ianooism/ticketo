@@ -6,15 +6,13 @@
   </div>
 <% end %>
 
-<% tickets.each_with_index do |ticket, index| %>
+<% tickets.each do |ticket| %>
   <div class="section">
     <%= render ticket %>
     <div>
       <%= link_to 'Show', [project, ticket] %>
       <% if ticket.owner?(current_user) %>
-        | <%= link_to 'Edit', edit_project_ticket_path(project, ticket) %>
-        | <%= link_to 'Destroy', [project, ticket], method: :delete,
-                      data: { confirm: 'Are you sure?' } %>
+        | <%= render 'tickets/actions_owner', project: project, ticket: ticket %>
       <% end %>
     </div>
   </div>

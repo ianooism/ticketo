@@ -25,12 +25,11 @@
 
 <div>
   Tags:
-  <% if ticket.tags.empty? %>
-    none
+  <% if ! ticket.tags.empty? %>
+    <%= ticket.tags.map do |tag| %>
+      <% link_to tag.name %>
+    <% end.join(' | ').html_safe %>
   <% else %>
-    <% ticket.tags.each_with_index do |tag, index| %>
-      <%= link_to tag.name, '#' %>
-      <%= ' | ' unless index == ticket.tags.size-1 %>
-    <% end %>
+    none
   <% end %>
 </div>
