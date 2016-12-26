@@ -28,9 +28,18 @@
   <% if ! tags.empty? %>
     <% tags.each do |tag| %>
       <%= link_to tag.name %>
-      (<%= link_to "remove", ticket_tag_path(ticket, tag), method: :delete %>)
-      <%= " | " unless tag == tags.last %>
+      (<%= link_to "remove", ticket_tag_path(ticket, tag),
+                   method: :delete %>)<%= ", " unless tag == tags.last %>
     <% end %>
+  <% else %>
+    none
+  <% end %>
+</div>
+
+<div>
+  Watchers:
+  <% if ! watchers.empty? %>
+    <%= watchers.map(&:email).join(", ") %>
   <% else %>
     none
   <% end %>
