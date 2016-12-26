@@ -26,9 +26,11 @@
 <div>
   Tags:
   <% if ! tags.empty? %>
-    <%= tags.map do |tag| %>
-      <% link_to tag.name %>
-    <% end.join(' | ').html_safe %>
+    <% tags.each do |tag| %>
+      <%= link_to tag.name %>
+      (<%= link_to "remove", ticket_tag_path(ticket, tag), method: :delete %>)
+      <%= " | " unless tag == tags.last %>
+    <% end %>
   <% else %>
     none
   <% end %>
