@@ -39,7 +39,14 @@
 <div>
   Watchers:
   <% if ! watchers.empty? %>
-    <%= watchers.map(&:email).join(", ") %>
+    <% watchers.each do |watcher| %>
+      <%= watcher.email %>
+      <% if watcher == current_user %>
+        (<%= link_to "remove", ticket_watcher_path(ticket, watcher),
+                     method: :delete %>)
+      <% end %>
+      <%= ", " unless watcher == watchers.last %>
+    <% end %>
   <% else %>
     none
   <% end %>
