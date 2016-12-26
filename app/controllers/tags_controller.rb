@@ -1,6 +1,6 @@
 class TagsController < ApplicationController
   def destroy
-    current_tag.destroy
+    current_ticket.tags.destroy(current_tag)
     redirect_to project_ticket_url(current_project, current_ticket),
       notice: "Tag destroyed."
   end
