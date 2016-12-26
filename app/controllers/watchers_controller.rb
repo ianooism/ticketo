@@ -1,5 +1,10 @@
 class WatchersController < ApplicationController
   def create
+    unless current_ticket.watchers.include?(current_user)
+      current_ticket.watchers << current_user
+      redirect_to [current_project, current_ticket],
+                  notice: "Enabled email notifications for this ticket."
+    end
   end
   
   def destroy

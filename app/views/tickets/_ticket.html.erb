@@ -47,6 +47,10 @@
       <% end %>
       <%= ", " unless watcher == watchers.last %>
     <% end %>
+    <% unless watchers.include?(current_user) %>
+        , <%= link_to "add me", ticket_watchers_path(ticket),
+                      method: :post %>
+    <% end %>
   <% else %>
     none
   <% end %>
