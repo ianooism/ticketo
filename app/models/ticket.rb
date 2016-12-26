@@ -7,6 +7,10 @@ class Ticket < ApplicationRecord
   has_many :comments, dependent: :destroy
   has_and_belongs_to_many :tags, -> { distinct }
   
+  # set state
+  before_validation :set_state, if: :new_record?
+  
+  # get and set tags
   def tag_names
     @tag_names = self.tags.map(&:name).join(' ') unless self.new_record?
     @tag_names
@@ -19,8 +23,6 @@ class Ticket < ApplicationRecord
   end
   
   validates :name, presence: true
-  
-  before_validation :set_state, if: :new_record?
   
   private
     def set_state
