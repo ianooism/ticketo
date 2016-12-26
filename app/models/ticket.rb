@@ -10,12 +10,12 @@ class Ticket < ApplicationRecord
     { class_name: 'User', join_table: :tickets_watchers },
     -> { distinct }
   
-  # set state
+  # state for ticket
   before_validation :set_state, if: :new_record?
   
-  # get and set tags
+  # tags for ticket
   def tag_names
-    @tag_names = self.tags.map(&:name).join(' ') unless self.new_record?
+    @tag_names = tags.map(&:name).join(' ') unless new_record?
     @tag_names
   end
   def tag_names=(names)
@@ -25,7 +25,7 @@ class Ticket < ApplicationRecord
     end
   end
   
-  # set watchers
+  # watchers for ticket
   after_create :set_watchers
   
   validates :name, presence: true
@@ -36,6 +36,6 @@ class Ticket < ApplicationRecord
     end
     
     def set_watchers
-      self.watchers << owner unless self.watchers.include?(owner)
+      self.watchers << owner unless watchers.include?(owner)
     end
 end
