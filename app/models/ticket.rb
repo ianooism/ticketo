@@ -6,6 +6,9 @@ class Ticket < ApplicationRecord
   belongs_to :state
   has_many :comments, dependent: :destroy
   has_and_belongs_to_many :tags, -> { distinct }
+  has_and_belongs_to_many :watchers,
+    { class_name: 'User', join_table: :tickets_watchers },
+    -> { distinct }
   
   # set state
   before_validation :set_state, if: :new_record?
@@ -22,10 +25,17 @@ class Ticket < ApplicationRecord
     end
   end
   
+  # set watchers
+  after_create :set_watchers
+  
   validates :name, presence: true
   
   private
     def set_state
       self.state = State.default
+    end
+    
+    def set_watchers
+      self.watchers << owner unless self.watchers.include?(owner)
     end
 end
