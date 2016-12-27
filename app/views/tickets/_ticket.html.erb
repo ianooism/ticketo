@@ -28,8 +28,28 @@
   <% if ! tags.empty? %>
     <% tags.each do |tag| %>
       <%= link_to tag.name %>
-      (<%= link_to "remove", ticket_tag_path(ticket, tag), method: :delete %>)
-      <%= " | " unless tag == tags.last %>
+      (<%= link_to "remove", ticket_tag_path(ticket, tag),
+                   method: :delete %>)<%= ", " unless tag == tags.last %>
+    <% end %>
+  <% else %>
+    none
+  <% end %>
+</div>
+
+<div>
+  Watchers:
+  <% if ! watchers.empty? %>
+    <% watchers.each do |watcher| %>
+      <%= watcher.email %>
+      <% if watcher == current_user %>
+        (<%= link_to "remove", ticket_watcher_path(ticket, watcher),
+                     method: :delete %>)
+      <% end %>
+      <%= ", " unless watcher == watchers.last %>
+    <% end %>
+    <% unless watchers.include?(current_user) %>
+        , <%= link_to "add me", ticket_watchers_path(ticket),
+                      method: :post %>
     <% end %>
   <% else %>
     none

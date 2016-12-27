@@ -6,9 +6,16 @@ class Ticket < ApplicationRecord
   belongs_to :state
   has_many :comments, dependent: :destroy
   has_and_belongs_to_many :tags, -> { distinct }
+  has_and_belongs_to_many :watchers,
+    { class_name: 'User', join_table: :tickets_watchers },
+    -> { distinct }
   
+  # state for ticket
+  before_validation :set_state, if: :new_record?
+  
+  # tags for ticket
   def tag_names
-    @tag_names = self.tags.map(&:name).join(' ') unless self.new_record?
+    @tag_names = tags.map(&:name).join(' ') unless new_record?
     @tag_names
   end
   def tag_names=(names)
@@ -18,12 +25,17 @@ class Ticket < ApplicationRecord
     end
   end
   
-  validates :name, presence: true
+  # watchers for ticket
+  after_create :set_watchers
   
-  before_validation :set_state, if: :new_record?
+  validates :name, presence: true
   
   private
     def set_state
       self.state = State.default
+    end
+    
+    def set_watchers
+      self.watchers << owner unless watchers.include?(owner)
     end
 end

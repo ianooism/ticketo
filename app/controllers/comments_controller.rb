@@ -14,6 +14,7 @@ class CommentsController < ApplicationController
     new_comment = Comment.new(new_comment_params)
     
     if new_comment.update(comment_form_params)
+      CommentMailer.after_create(new_comment).deliver_now
       redirect_to [current_project, current_ticket], notice: 'Comment created.'
     else
       render :new, locals: { project: current_project,

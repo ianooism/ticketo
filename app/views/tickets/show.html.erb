@@ -1,6 +1,6 @@
 <h1>Ticket</h1>
 
-<%= render ticket, tags: ticket.tags %>
+<%= render ticket, tags: ticket.tags, watchers: ticket.watchers %>
 <div>
   <%= render 'footer', project: project %>
   <% if ticket.owner?(current_user) %>
