@@ -5,17 +5,15 @@ class TicketsController < ApplicationController
   def show
     render :show, locals: { project: current_project,
                             ticket: current_ticket,
-                            comment: Comment.new(new_comment_params) }
+                            comment: new_comment }
   end
   
   def new
     render :new, locals: { project: current_project,
-                           ticket: Ticket.new(new_ticket_params) }
+                           ticket: new_ticket }
   end
   
   def create
-    new_ticket = Ticket.new(new_ticket_params)
-    
     if new_ticket.update(ticket_form_params)
       redirect_to current_project, notice: 'Ticket created.'
     else
@@ -54,6 +52,14 @@ class TicketsController < ApplicationController
     
     def current_ticket
       @ticket ||= current_project.tickets.find(params[:id])
+    end
+    
+    def new_ticket
+      @ticket ||= Ticket.new(new_ticket_params)
+    end
+    
+    def new_comment
+      @comment ||= Comment.new(new_comment_params)
     end
     
     def new_comment_params

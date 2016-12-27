@@ -8,16 +8,14 @@ class ProjectsController < ApplicationController
 
   def show
     render :show, locals: { project: current_project,
-                            ticket: Ticket.new(new_ticket_params) }
+                            ticket: new_ticket }
   end
 
   def new
-    render :new, locals: { project: Project.new(new_project_params) }
+    render :new, locals: { project: new_project }
   end
 
   def create
-    new_project = Project.new(new_project_params)
-    
     if new_project.update(project_form_params)
       redirect_to projects_url, notice: 'Project created.'
     else
@@ -49,6 +47,14 @@ class ProjectsController < ApplicationController
     
     def current_project
       @project ||= Project.find(params[:id])
+    end
+    
+    def new_project
+      @project ||= Project.new(new_project_params)
+    end
+    
+    def new_ticket
+      @ticket ||= Ticket.new(new_ticket_params)
     end
     
     def new_project_params

@@ -7,12 +7,10 @@ class CommentsController < ApplicationController
   def new
     render :new, locals: { project: current_project,
                            ticket: current_ticket,
-                           comment: Comment.new(new_comment_params) }
+                           comment: new_comment }
   end
   
   def create
-    new_comment = Comment.new(new_comment_params)
-    
     if new_comment.update(comment_form_params)
       CommentMailer.after_create(new_comment).deliver_now
       redirect_to [current_project, current_ticket], notice: 'Comment created.'
@@ -30,6 +28,10 @@ class CommentsController < ApplicationController
     
     def current_project
       @project ||= current_ticket.project
+    end
+    
+    def new_comment
+      @comment ||= Comment.new(new_comment_params)
     end
     
     def new_comment_params
