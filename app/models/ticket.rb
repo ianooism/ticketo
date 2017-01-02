@@ -19,7 +19,7 @@ class Ticket < ApplicationRecord
   after_create :add_tags,
                :add_watcher
   
-  def callback(args)
+  def update_via_interface(args)
     state = args.fetch(:state, nil)
     tags = args.fetch(:tags, nil)
     watcher = args.fetch(:watcher, nil)
@@ -36,6 +36,9 @@ class Ticket < ApplicationRecord
     
     def set_state(new_state = State.default)
       self.state = new_state
+      unless new_record?
+        save!
+      end
     end
     
     def add_tags(names = tag_names)
@@ -45,6 +48,8 @@ class Ticket < ApplicationRecord
     end
     
     def add_watcher(watcher = owner)
-      self.watchers << watcher unless watchers.include?(watcher)
+      unless watchers.include?(watcher)
+        self.watchers << watcher
+      end
     end
 end

@@ -9,15 +9,10 @@ class Comment < ApplicationRecord
   validates :body, presence: true
   
   after_initialize :set_states, if: :new_record?
-  after_save :ticket_callback
   
   private
     def set_states
       self.state = ticket.state
       self.previous_state = state
-    end
-    
-    def ticket_callback
-      ticket.callback(state: state, tags: tag_names, watcher: owner)
     end
 end
