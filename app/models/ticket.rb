@@ -1,6 +1,8 @@
 class Ticket < ApplicationRecord
   include Ownable
   
+  attr_accessor :tag_names
+  
   belongs_to :project
   belongs_to :owner, class_name: 'User'
   belongs_to :state
@@ -10,32 +12,39 @@ class Ticket < ApplicationRecord
                           { class_name: 'User', join_table: :tickets_watchers },
                           -> { distinct }
   
-  # state for ticket
-  before_validation :set_state, if: :new_record?
-  
-  # tags for ticket
-  def tag_names
-    @tag_names = tags.map(&:name).join(' ') unless new_record?
-    @tag_names
-  end
-  def tag_names=(names)
-    @tag_names = names
-    names.split.each do |name|
-      self.tags << Tag.find_or_initialize_by(name: name)
-    end
-  end
-  
-  # watchers for ticket
-  after_create :set_watchers
-  
   validates :name, presence: true
   
+  after_initialize :format_tags, unless: :new_record?
+  before_validation :set_state, if: :new_record?
+  after_create :add_tags,
+               :add_watcher
+  
+  def callback(args)
+    state = args.fetch(:state, nil)
+    tags = args.fetch(:tags, nil)
+    watcher = args.fetch(:watcher, nil)
+    
+    set_state(state) if state
+    add_tags(tags) if tags
+    add_watcher(watcher) if watcher
+  end
+  
   private
-    def set_state
-      self.state = State.default
+    def format_tags
+      self.tag_names = tags.map(&:name).join(' ')
     end
     
-    def set_watchers
-      self.watchers << owner unless watchers.include?(owner)
+    def set_state(new_state = State.default)
+      self.state = new_state
+    end
+    
+    def add_tags(names = tag_names)
+      names.split.each do |name|
+        self.tags << Tag.find_or_initialize_by(name: name)
+      end
+    end
+    
+    def add_watcher(watcher = owner)
+      self.watchers << watcher unless watchers.include?(watcher)
     end
 end
