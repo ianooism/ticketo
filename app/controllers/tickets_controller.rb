@@ -3,55 +3,55 @@ class TicketsController < ApplicationController
   before_action :authorize_user, only: [:edit, :update, :destroy]
   
   def show
-    render :show, locals: { project: current_project,
-                            ticket: current_ticket,
+    render :show, locals: { project: requested_project,
+                            ticket: requested_ticket,
                             comment: new_comment }
   end
   
   def new
-    render :new, locals: { project: current_project,
+    render :new, locals: { project: requested_project,
                            ticket: new_ticket }
   end
   
   def create
     if new_ticket.update(ticket_form_params)
-      redirect_to current_project, notice: 'Ticket created.'
+      redirect_to requested_project, notice: 'Ticket created.'
     else
-      render :new, locals: { project: current_project,
+      render :new, locals: { project: requested_project,
                              ticket: new_ticket }
     end
   end
 
   def edit
-    render :edit, locals: { project: current_project,
-                            ticket: current_ticket }
+    render :edit, locals: { project: requested_project,
+                            ticket: requested_ticket }
   end
 
   def update
-    if current_ticket.update(ticket_form_params)
-      redirect_to current_project, notice: 'Ticket updated.'
+    if requested_ticket.update(ticket_form_params)
+      redirect_to requested_project, notice: 'Ticket updated.'
     else
-      render :edit, locals: { project: current_project,
-                              ticket: current_ticket }
+      render :edit, locals: { project: requested_project,
+                              ticket: requested_ticket }
     end
   end
 
   def destroy
-    current_ticket.destroy
-    redirect_to current_project, notice: 'Ticket destroyed.'
+    requested_ticket.destroy
+    redirect_to requested_project, notice: 'Ticket destroyed.'
   end
 
   private
     def authorize_user
-      raise NotAuthorized unless current_ticket.owner?(current_user)
+      raise NotAuthorized unless requested_ticket.owner?(current_user)
     end
     
-    def current_project
+    def requested_project
       @project ||= Project.find(params[:project_id])
     end
     
-    def current_ticket
-      @ticket ||= current_project.tickets.find(params[:id])
+    def requested_ticket
+      @ticket ||= requested_project.tickets.find(params[:id])
     end
     
     def new_ticket
@@ -63,12 +63,12 @@ class TicketsController < ApplicationController
     end
     
     def new_comment_params
-      { ticket: current_ticket,
+      { ticket: requested_ticket,
         owner: current_user }
     end
     
     def new_ticket_params
-      { project: current_project,
+      { project: requested_project,
         owner: current_user }
     end
     

@@ -7,7 +7,7 @@ class ProjectsController < ApplicationController
   end
 
   def show
-    render :show, locals: { project: current_project,
+    render :show, locals: { project: requested_project,
                             ticket: new_ticket }
   end
 
@@ -24,28 +24,28 @@ class ProjectsController < ApplicationController
   end
 
   def edit
-    render :edit, locals: { project: current_project }
+    render :edit, locals: { project: requested_project }
   end
 
   def update
-    if current_project.update(project_form_params)
+    if requested_project.update(project_form_params)
       redirect_to projects_url, notice: 'Project updated.'
     else
-      render :edit, locals: { project: current_project }
+      render :edit, locals: { project: requested_project }
     end
   end
 
   def destroy
-    current_project.destroy
+    requested_project.destroy
     redirect_to projects_url, notice: 'Project destroyed.'
   end
 
   private
     def authorize_user
-      raise NotAuthorized unless current_project.owner?(current_user)
+      raise NotAuthorized unless requested_project.owner?(current_user)
     end
     
-    def current_project
+    def requested_project
       @project ||= Project.find(params[:id])
     end
     
@@ -62,7 +62,7 @@ class ProjectsController < ApplicationController
     end
     
     def new_ticket_params
-      { project: current_project,
+      { project: requested_project,
         owner: current_user }
     end
     

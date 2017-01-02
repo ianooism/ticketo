@@ -7,8 +7,8 @@ class Ticket < ApplicationRecord
   has_many :comments, dependent: :destroy
   has_and_belongs_to_many :tags, -> { distinct }
   has_and_belongs_to_many :watchers,
-    { class_name: 'User', join_table: :tickets_watchers },
-    -> { distinct }
+                          { class_name: 'User', join_table: :tickets_watchers },
+                          -> { distinct }
   
   # state for ticket
   before_validation :set_state, if: :new_record?
