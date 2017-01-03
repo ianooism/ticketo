@@ -1,12 +1,12 @@
 class WatchersController < ApplicationController
   def create
-    requested_ticket.bulk_update(ticket_update_params)
+    requested_ticket.watch(current_user)
     redirect_to [current_project, requested_ticket],
                 notice: "Enabled email notifications for this ticket."
   end
   
   def destroy
-    requested_ticket.watchers.destroy(current_user)
+    requested_ticket.unwatch(current_user)
     redirect_to [current_project, requested_ticket],
                 notice: "Disabled email notifications for this ticket."
   end
@@ -18,9 +18,5 @@ class WatchersController < ApplicationController
     
     def current_project
       requested_ticket.project
-    end
-    
-    def ticket_update_params
-      { watcher: current_user }
     end
 end

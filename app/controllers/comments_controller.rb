@@ -9,7 +9,7 @@ class CommentsController < ApplicationController
   
   def create
     if new_comment.update(comment_form_params)
-      new_comment.ticket.bulk_update(ticket_update_params)
+      new_comment.ticket.update_association(ticket_update_params)
       CommentMailer.after_create(new_comment).deliver_now
       redirect_to [current_project, requested_ticket],
                   notice: 'Comment created.'

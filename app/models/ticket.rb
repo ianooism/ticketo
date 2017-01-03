@@ -4,22 +4,30 @@ class Ticket < ApplicationRecord
   attr_accessor :tag_names
   
   belongs_to :project
-  belongs_to :owner, class_name: 'User'
+  belongs_to :owner, class_name: :User
   belongs_to :state
+  
   has_many :comments, dependent: :destroy
   has_and_belongs_to_many :tags, -> { distinct }
-  has_and_belongs_to_many :watchers,
-                          { class_name: 'User', join_table: :tickets_watchers },
-                          -> { distinct }
+  has_and_belongs_to_many :watchers, -> { distinct },
+                          { class_name: :User, join_table: :tickets_watchers }
   
   validates :name, presence: true
   
   after_initialize :format_tags, unless: :new_record?
-  before_validation :set_state, if: :new_record?
-  after_create :add_tags,
-               :add_watcher
+  after_initialize :set_state, if: :new_record?
+  after_create :add_tags
+  after_create :add_watcher
   
-  def bulk_update(args)
+  def watch(watcher)
+    add_watcher(watcher)
+  end
+  
+  def unwatch(watcher)
+    watchers.destroy(watcher)
+  end
+  
+  def update_association(args)
     state = args.fetch(:state, nil)
     tags = args.fetch(:tags, nil)
     watcher = args.fetch(:watcher, nil)
@@ -36,9 +44,7 @@ class Ticket < ApplicationRecord
     
     def set_state(new_state = State.default)
       self.state = new_state
-      unless new_record?
-        save!
-      end
+      save! unless new_record?
     end
     
     def add_tags(names = tag_names)
