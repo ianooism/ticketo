@@ -19,7 +19,7 @@ class Ticket < ApplicationRecord
   after_create :add_tags,
                :add_watcher
   
-  def update_via_interface(args)
+  def bulk_update(args)
     state = args.fetch(:state, nil)
     tags = args.fetch(:tags, nil)
     watcher = args.fetch(:watcher, nil)
